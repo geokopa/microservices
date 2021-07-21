@@ -20,12 +20,11 @@ namespace Basket.Api.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{username}", Name = "GetBasket")]
+        [HttpGet("{userName}", Name = "GetBasket")]
         [ProducesResponseType(typeof(ShoppingCart), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<ShoppingCart>> GetGBasket(string userName)
+        public async Task<ActionResult<ShoppingCart>> GetBasket(string userName)
         {
             var basket = await _repository.GetBasket(userName);
-
             return Ok(basket ?? new ShoppingCart(userName));
         }
 
