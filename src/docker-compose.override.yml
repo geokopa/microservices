@@ -5,9 +5,23 @@ services:
     container_name: catalogdb
     restart: always
     ports:
-        - "27017:27017"
+      - "27017:27017"
     volumes:
-        - mongo_data:/data/db
+      - mongo_data:/data/db
+  redis-loc:
+    container_name: redis-loc
+    restart: always
+    ports:
+      - "6379:6379"
+  portainer:
+    container_name: portainer
+    restart: always
+    ports:
+      - "8080:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
   catalog.api:
     container_name: catalog.api
     environment:
@@ -17,3 +31,14 @@ services:
       - catalogdb
     ports:
       - "8000:80"
+
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "CacheSettings:ConnectionString=redis-loc:6379"
+    depends_on:
+      - redis-loc
+    ports:
+      - "8001:80"
+
